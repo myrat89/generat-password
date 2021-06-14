@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<title>input</title>
+	<style type="text/css">
+		body{height:500px; margin:0; padding:0;}
+		#but{
+			display: block; position:relative; margin-top: 20px;
+			left:50%; cursor: pointer; padding:5px 10px;
+			margin-left:-100px;
+		}
+		textarea, p {position:relative; left:50%; margin-left: -100px; top:15px;}
+		.text{
+			background-color: rgba(95 40 155); color: rgba(255 255 255);
+		}
+		.di{
+		width:160px; height:100px; border:1px solid rgba(0 0 0); display:inline-block;
+		margin-top:10px; margin-left:15px;
+		}
+		.password_generator{margin-left:20px; height:30px; width:250px; font-size:20px;}
+		.bo{width:450px; height:75px; position:relative; 
+		left:20%; margin-left:-225px; display:inline-block; 
+		}
+		#box_vid{
+		width:30px; height:20px; background-image: url(eye.png);
+		position:absolute; display:inline-block; z-index:1;
+		left:240px; top:7px; cursor:pointer; background-size:100% 100%;
+		opacity:0.5; transition:opacity 0.5s;
+		}
+		#box_vid:hover{opacity:1;}
+		.par_password{
+			position:relative; font-weight:bold; font-size:20px; margin:0;
+			
+		}
+		.bts_save{
+		position:relative; left:220px; margin-top:20px; cursor:pointer; opacity:0; transition:opacity 0.75s;
+		}
+		.div_save_password{
+			width:200px; min-height:150px; position:relative;
+			left:57%; top:20px; text-align:center;
+		}
+		.ppp{left:0; top:8px; margin:0; font-weight:bold; font-size:20px; margin-top:5px;}
+	</style>
+</head>
+<body>
+	<input type="text" id="inp_palendrom"> <button id="but_palendrom">Проверить на палендром</button>
+	<input type="file" multiple id="fil">
+	<button id="but">Создать textarea</button>
+		
+		<div class="di"></div>
+		<div class="di"></div>
+		<div class="di"></div>
+			<div class="bo">
+				<div id="box_vid" title="Посмотреть пароль"></div>
+				<input type="password" class="password_generator"> <button>Сгенирировать пароль</button>
+				<button class="bts_save">Сохранить пароль</button>
+			</div>
+			<div class="div_save_password">
+				<p class="ppp">Сгенирированные пароли:</p>
+			</div>
+	<script type="text/javascript">
+	
+	// скрипт input password 
+	
+	let inp_password = document.getElementsByClassName("password_generator")[0]; // глобальная область видимости
+	let box_eye = document.getElementById("box_vid"); box_eye.addEventListener("click", function() {
+		if (box_eye.style.opacity != "1") {
+			this.style.opacity = "1";
+			inp_password.type = "text";
+		}
+		else{
+			this.style.opacity = "0.5";
+			inp_password.type = "password";
+
+		}
+	});
+	let paragraf_password = document.createElement("p"); paragraf_password.className = "par_password"; 
+	let but_genirator = document.getElementsByTagName("button")[2]; but_genirator.addEventListener("click", function() {
+		let pass = "";
+		let strong = 10;
+		let dic = "abcdefghijklmnopqrstuvwxyz1234567890_-,:;`QWERTYUIOPASDFGHJKLZXCVBNM[]{}()";
+ 
+		for (let ii = 0; ii < strong; ii++) 
+		{
+			pass += dic.charAt(Math.floor(Math.random() * dic.length)); // изучить метод
+		}
+		paragraf_password.innerHTML = pass; // генирация пароля 
+		document.getElementsByClassName("password_generator")[0].value = pass;
+		but_genirator.after(paragraf_password); // вставка параграфа после тега button 
+		buts_save_password.style.opacity = "1";
+	});
+	
+	// событие на кнопке сохранить пароль 
+	
+	let buts_save_password = document.getElementsByClassName("bts_save")[0]; buts_save_password.addEventListener("click", function() {
+		let parsave = document.createElement("p"); parsave.className = "ppp"; parsave.innerHTML = document.getElementsByClassName("password_generator")[0].value;
+		parsave.style.color = "green"; parsave.style.textShadow = "1px 2px 1px #000000";
+		document.getElementsByClassName("ppp")[0].after(parsave);
+	});
+	
+	
+	// проверка на палендром
+	
+	let but_pal = document.getElementById("but_palendrom").addEventListener("click", function() {
+		let inp_pal_value = document.getElementById("inp_palendrom").value;
+		inp_pal_value = inp_pal_value.toLowerCase();
+		let massiv = inp_pal_value.split("").reverse();
+		massiv = massiv.join("");
+		if (inp_pal_value == massiv) {
+			console.log(true);
+			alert("Веденое значение является палендромом");
+		}
+		else {
+			console.log(false);
+			alert("Веденое значение не является палендромом");
+		}
+		
+	});
+	
+	
+	let divs = document.getElementsByClassName("di"); 
+	let bool = true; 
+	for (let s = 0; s < divs.length; s++) 
+	divs[s].addEventListener("click", function() {
+		if (bool == true) {
+			this.style.backgroundColor = "rgba(129 130 155/ 20%)";
+			bool = false;
+		}
+		else {
+			this.style.backgroundColor = "rgba(0, 255, 0)";
+			bool = true;
+		}
+	});
+	
+	
+	
+	
+	//работа с input file
+
+	let file = document.getElementById("fil"); file.addEventListener("change", function(event) {
+		let fils = file.files[0];
+		let rider = new FileReader();
+		rider.onload = function(event) {
+			console.log(rider.result);
+		}
+		rider.readAsText(fils);
+		console.log(rider);
+
+});
+
+
+		//создаем разметку страницы
+
+		let inpcols = document.createElement("input"); inpcols.type = "text"; inpcols.size = "1";
+		inpcols.maxLength = "2"; inpcols.className = "inpu";//размер inputa
+		let inprows = document.createElement("input"); inprows.type = "text"; inprows.size = "1";
+		inprows.maxLength = "2"; inprows.className = "inpu";//размер inputa
+		let textcols = document.createElement("p"); textcols.className = "par";
+		textcols.prepend(inpcols); textcols.prepend("cols: ");//вставляем
+		let textrows = document.createElement("p"); textrows.className = "par";
+		textrows.prepend(inprows); textrows.prepend("rows: ");//вставляем
+	let textarea = document.createElement("textarea"); textarea.cols = "5"; textarea.rows = "5";
+	textarea.className = "text";
+
+
+	let buts = document.getElementById("but"); buts.addEventListener("click", function() {
+		
+		if (this.innerHTML == "Создать textarea") {
+			this.innerHTML = "Удалить textarea";
+		buts.after(textcols); textcols.after(textrows); textrows.after(textarea);
+
+	// события на инпутах
+
+	let inputs = document.getElementsByClassName("inpu"); 
+	for (let i = 0; i < inputs.length; i++)
+		inputs[i].addEventListener("input", function() {
+			textarea.cols = inputs[0].value;
+			textarea.rows = inputs[1].value;
+			textarea.value = "cols= " + inputs[0].value + " " + "rows= " + inputs[1].value
+});
+	}
+	else {
+		this.innerHTML = "Создать textarea";
+		document.body.removeChild(textcols); document.body.removeChild(textrows); document.body.removeChild(textarea);
+	}
+
+	});
+
+
+
+	//change input событие
+	</script>
+</body>
+</html>
